@@ -21,7 +21,12 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('https://sdk-apps-noneu.truecaller.com/oauth/device/code');
+        const response = await fetch('https://sdk-apps-noneu.truecaller.com/oauth/device/code', {
+          method: 'POST', // Specify the method as POST
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+        });
         const result = await response.json();
         console.log(result)
         setUserData(result);
@@ -72,10 +77,10 @@ function App() {
               <QRCode
                 size={256}
                 style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                value={"https://www.google.com"}
+                value={userData.verification_uri_complete}
                 viewBox={`0 0 256 256`}
               />
-              <ReactPolling
+              {userData.device_code && <ReactPolling
               
                 url={`https://sdk-apps-noneu.truecaller.com/oauth/device/token?grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Adevice_code
                     &device_code=${userData.device_code}`}
@@ -83,9 +88,14 @@ function App() {
                 onSuccess={(res) => handleSuccess(res)}
                 onFailure={() => console.log("handle failure")} // this is optional
                 method={"POST"}
-
-              
-              />
+                render={({ isPolling }) => {
+                  if (isPolling) {
+                    return <div></div>;
+                  } else {
+                    return <div></div>;
+                  }
+                }}
+              />}
               {isRejected && <div>Sorry... something went wrong.</div>}
             </div></div> : <div> <h2>Welcome {clientData.given_name}</h2></div>
           }

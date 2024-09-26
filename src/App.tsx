@@ -1,6 +1,6 @@
 import './App.css'
 import QRCode from 'react-qr-code';
-import ReactPolling from "react-polling/lib/ReactPolling";
+// import ReactPolling from "react-polling/lib/ReactPolling";
 import { useEffect, useState } from 'react';
 function App() {
   const [userData, setUserData] = useState('');
@@ -20,11 +20,11 @@ function App() {
     // Call fetchData when component mounts
     fetchData();
   }, [])
-  const handleSuccess = (res) => {
-    console.log(res);
-    // setData(res);
-    return false;
-  };
+  // const handleSuccess = (res) => {
+  //   console.log(res);
+  //   // setData(res);
+  //   return false;
+  // };
   // const fetchData = async () => {
   //   const data = await fetch("https://jsonplaceholder.typicode.com/users")
   //   const jsonData = await data.json();
@@ -53,21 +53,21 @@ function App() {
               value={"https://www.google.com"}
               viewBox={`0 0 256 256`}
             />
-            <ReactPolling
+            {/* <ReactPolling
               url={"https://jsonplaceholder.typicode.com/users"}
               interval={3000} // in milliseconds(ms)
               retryCount={10} // this is optional
-              onSuccess={(res) => console.log(res)}
+              // onSuccess={(res) => console.log(res)}
               onFailure={() => console.log("handle failure")} // this is optional
               method={"POST"}
-              render={({ startPolling, stopPolling, isPolling }) => {
+              render={({ isPolling }) => {
                 if (isPolling) {
                   return <div> Hello I am polling</div>;
                 } else {
                   return <div> Hello I stopped polling</div>;
                 }
               }}
-          />
+          /> */}
           </div>
         </section>
       </div>

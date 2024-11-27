@@ -1,42 +1,74 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+.signin-container {
+  background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent black */
+  color: white;
+  width: 90vw; /* Scales with screen size */
+  max-width: 1400px; /* Limit width for big screens */
+  padding: 40px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.option {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.option h3 {
+  margin-bottom: 20px;
+  font-size: 2rem; /* Scalable font size */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.option li {
+  margin: 13px;
 }
 
-.card {
-  padding: 2em;
+.qr-code {
+  display: flex;
+  flex-direction: column;
+  align-items: right;
 }
 
-.read-the-docs {
-  color: #888;
+.qr-code img {
+  width: 300px;
+  height: 300px; /* Bigger for large screens */
+}
+
+.activation-code {
+  font-size: 3rem; /* Larger for readability */
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.regenerate-btn {
+  background-color: #666;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-container {
+  margin-top: 40px;
+}
+
+.btn-container button {
+  background-color: #f5c518;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 20px;
+  color: black;
+  font-size: 1.2rem;
+}
+
+.btn-container button:last-child {
+  background-color: #e6e6e6;
 }

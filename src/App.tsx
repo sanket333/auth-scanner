@@ -1,6 +1,7 @@
 import './App.css'
 import QRCode from 'react-qr-code';
 import { useEffect, useState, useRef } from 'react';
+import CountdownTimer from './CountdownTimer';
 
 function App() {
   const [userData, setUserData] = useState({
@@ -12,9 +13,12 @@ function App() {
     expires_in: "", // Default
     interval: "" // Default
   });
-  const [isRejected] = useState(false);
+  // const [isRejected] = useState(false);
+  // const [isSuccess, setIsSuccess] = useState(false); // To show success animation
+
   const [clientData, setClientData] = useState({
-    given_name: "34edffsfd"
+    given_name: "",
+    picture: ""
   });
   const [isPolled, setIsPolled] = useState(true);
   const [, setUrlEncodedData] = useState("");
@@ -27,7 +31,12 @@ function App() {
       pollingRef.current = null;
     }
   };
-
+  // const handleScanComplete = () => {
+  //   setTimeout(() => {
+  //     setIsPolled(false); // Hide QR code
+  //     setIsSuccess(true); // Show success message
+  //   }, 1000); // Simulate a delay after scanning
+  // };
   const startPolling = (urlEncodedDataTemp) => {
     if (!pollingRef.current) {
       pollingRef.current = setInterval(() => {
@@ -91,43 +100,128 @@ function App() {
     return () => stopPolling();
   }, [])
 
+
+  
   return (
-    <>
-      <div className='container'>
-        <section id="nav">
-          <img width={100} src='/logo.jpg'/>
-        </section>
-        <section className='scanner-container'>
-          {
-            isPolled ? <div>
-              <h3>Login With Truecaller</h3>
-              {/* <h2>{userData.}</h2> */}
-              <div
-              style={{
-                height: "auto",
-                width: "100%",
-              }}
-             
-            >
-                
-              <QRCode
-                size={256}
-                style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                value={userData.verification_uri_complete}
-                viewBox={`0 0 256 256`}
-                
-              />
-              {isRejected && <div>Sorry... something went wrong.</div>}
+    <div className="netflix-banner">
+      <div className="moving-background"></div>
+      <div className="banner-content">
+        <div className="banner-header">
+          <h1 className="logo">PETFLIX</h1>
+          {/* <div className="language-options">
+            <button className="language-btn">English</button>
+            <button className="sign-in-btn">Sign In</button>
+          </div> */}
+        </div>
+        <div className="banner-main-content">
+        {isPolled ? (<div className="signin-container">
+            {/* Option 1 */}
+            
+            <div className="option">
+              <h3>Sign in with Truecaller</h3>
+              <p>For quick sign up, scan the QR code shown</p>
+              <div className="qr-code">
+                <div>
+                    <div>  
+                    <QRCode
+                      size={256}
+                     
+                      value={userData.verification_uri_complete}
+                      // viewBox={`0 0 256 256`}
+                      
+                    />
+                    {/* {isRejected && <div>Sorry... something went wrong.</div>} */}
+                  </div>
+                  {/* <button
+                      className="regenerate-btn"
+                      onClick={handleScanComplete}
+                    >
+                      Simulate Scan
+                    </button> */}
+                </div> 
+              </div>
             </div>
-          </div> : 
-          <div> <h2>Welcome {clientData.given_name}</h2></div>
+
+            {/* Option 2 */}
+            <div className="option">
+              <h3>Steps</h3>
+              {/* <p>Sign-in from Browser/Mobile app</p> */}
+              <ol>
+                <li>
+                  Open the app &gt;&gt; Go to More &gt;&gt; Click <b>Activate TV</b>
+                </li>
+                <li>
+                  Or go to <b>https://example.com/activate</b>
+                </li>
+                <li>Enter the code below</li>
+              </ol>
+              <div className="activation-code">
+                
+                <button className="regenerate-btn">Reload QR</button>
+              </div>
+              <CountdownTimer/>
+             
+            </div>
+          </div>): 
+          (<div className="success-container">
+          <div className="avatar-container">
+            <img
+              className="avatar"
+              src={clientData?.picture}
+              alt={`${clientData?.given_name}'s avatar`}
+            />
+          </div>
+          <div className="success-animation">
+            <h2>Welcome, {clientData.given_name}!</h2>
+            <p className="success-message">
+              Your sign-in was successful. Enjoy your experience on Petflix!
+            </p>
+          </div>
+        </div>)
           }
-          
-          
-        </section>
+        </div>
       </div>
-    </>
-  )
+    </div>
+  );
+
+
+//   return (
+//     <>
+//       <div className='container'>
+//         <section id="nav">
+//           <img width={100} height={100} src='/logo.jpg'/>
+//         </section>
+//         <section className='scanner-container'>
+          // {
+          //   isPolled ? <div>
+          //     <h3>Login With Truecaller</h3>
+          //     {/* <h2>{userData.}</h2> */}
+          //     <div
+          //     style={{
+          //       height: "auto",
+          //       width: "100%",
+          //     }}
+             
+          //   >
+                
+          //     <QRCode
+          //       size={256}
+          //       style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+          //       value={userData.verification_uri_complete}
+          //       viewBox={`0 0 256 256`}
+                
+          //     />
+          //     {isRejected && <div>Sorry... something went wrong.</div>}
+          //   </div>
+          // </div> : 
+          // <div> <h2>Welcome {clientData.given_name}</h2></div>
+          // }
+          
+          
+//         </section>
+//       </div>
+//     </>
+//   )
 }
 
 export default App;

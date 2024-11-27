@@ -1,7 +1,7 @@
 import './App.css'
 import QRCode from 'react-qr-code';
-import ReactPolling from "react-polling/lib/ReactPolling";
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
+
 function App() {
   const [userData, setUserData] = useState({
     device_code: "", // UUID
@@ -12,12 +12,56 @@ function App() {
     expires_in: "", // Default
     interval: "" // Default
   });
-  const [isRejected, SetIsRejected] = useState(false);
+  const [isRejected] = useState(false);
   const [clientData, setClientData] = useState({
-    given_name: ""
+    given_name: "34edffsfd"
   });
-  const [isPolled, setIsPolled] = useState(true)
+  const [isPolled, setIsPolled] = useState(true);
+  const [, setUrlEncodedData] = useState("");
+  // const [, setStatus] = useState({});
+  const pollingRef = useRef(null);
+
+  const stopPolling = () => {
+    if (pollingRef.current) {
+      clearInterval(pollingRef.current);
+      pollingRef.current = null;
+    }
+  };
+
+  const startPolling = (urlEncodedDataTemp) => {
+    if (!pollingRef.current) {
+      pollingRef.current = setInterval(() => {
+        polling(urlEncodedDataTemp);
+      }, 5000); // Poll every 5 seconds
+    }
+  };
   
+  const polling = async (urlEncodedDataTemp) => {
+    //fetch server data
+    const response = await fetch('https://sdk-apps-noneu.truecaller.com/oauth/device/token', {
+      method: 'POST', // Specify the method as POST
+      headers: {
+       'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: urlEncodedDataTemp
+    });
+    const data = await response.json();
+
+    if(!data.sub) {
+      if(data?.status === "PENDING") {
+        console.log("pending")
+      } else if(data?.status === "REJECTED") {
+        console.log("rejected")
+      } else {
+        console.log("issue from backend")
+      }
+    } else {
+      setClientData(data);
+      setIsPolled(false)
+      stopPolling();
+    }
+ };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -30,6 +74,13 @@ function App() {
         const result = await response.json();
         console.log(result)
         setUserData(result);
+        const urlEncodedDataTemp = new URLSearchParams({
+          grant_type : "rjkgjrgktge",
+          device_code : result.device_code
+        }).toString();
+        setUrlEncodedData(urlEncodedDataTemp)
+        startPolling(urlEncodedDataTemp);
+        
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -37,31 +88,14 @@ function App() {
 
     // Call fetchData when component mounts
     fetchData();
+    return () => stopPolling();
   }, [])
-  const handleSuccess = (res) => {
-    console.log(res);
-    if(res.status === "REJECTED")   {
-      SetIsRejected(true);
-    }
-    if(res.sub) {
-      setClientData(res)
-      setIsPolled(false);
-    }
-    // setData(res);
-    return false;
-  };
-  // const fetchData = async () => {
-  //   const data = await fetch("https://jsonplaceholder.typicode.com/users")
-  //   const jsonData = await data.json();
-  //   setUserData(jsonData.id)
-  //   console.log(userData)
-  // }
 
   return (
     <>
       <div className='container'>
         <section id="nav">
-          <img width={100} src='../public/logo.jpg'/>
+          <img width={100} src='/logo.jpg'/>
         </section>
         <section className='scanner-container'>
           {
@@ -73,31 +107,20 @@ function App() {
                 height: "auto",
                 width: "100%",
               }}
+             
             >
+                
               <QRCode
                 size={256}
                 style={{ height: "auto", maxWidth: "100%", width: "100%" }}
                 value={userData.verification_uri_complete}
                 viewBox={`0 0 256 256`}
+                
               />
-              {userData.device_code && <ReactPolling
-              
-                url={`https://sdk-apps-noneu.truecaller.com/oauth/device/token?grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Adevice_code
-                    &device_code=${userData.device_code}`}
-                interval={3000} // in milliseconds(ms)
-                onSuccess={(res) => handleSuccess(res)}
-                onFailure={() => console.log("handle failure")} // this is optional
-                method={"POST"}
-                render={({ isPolling }) => {
-                  if (isPolling) {
-                    return <div></div>;
-                  } else {
-                    return <div></div>;
-                  }
-                }}
-              />}
               {isRejected && <div>Sorry... something went wrong.</div>}
-            </div></div> : <div> <h2>Welcome {clientData.given_name}</h2></div>
+            </div>
+          </div> : 
+          <div> <h2>Welcome {clientData.given_name}</h2></div>
           }
           
           

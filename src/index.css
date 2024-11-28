@@ -185,6 +185,13 @@ Main Content
   color: white;
   margin-top: 10px;
 }
+.user-number {
+  font-size: 1.5rem;
+  color: #ffcc00; /* Use a color that stands out */
+  margin-top: 0.5rem;
+  font-weight: bold;
+  text-align: center;
+}
 
 @keyframes fadeIn {
   0% {

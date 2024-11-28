@@ -1,5 +1,6 @@
 import './App.css'
-import QRCode from 'react-qr-code';
+// import QRCode from 'react-qr-code';
+import {QRCodeCanvas} from 'qrcode.react';
 import { useEffect, useState, useRef } from 'react';
 import CountdownTimer from './CountdownTimer';
 
@@ -18,7 +19,8 @@ function App() {
 
   const [clientData, setClientData] = useState({
     given_name: "",
-    picture: ""
+    picture: "",
+    phone_number: ""
   });
   const [isPolled, setIsPolled] = useState(true);
   const [, setUrlEncodedData] = useState("");
@@ -123,7 +125,7 @@ function App() {
               <div className="qr-code">
                 <div>
                     <div>  
-                    <QRCode
+                    <QRCodeCanvas
                       size={256}
                      
                       value={userData.verification_uri_complete}
@@ -148,12 +150,14 @@ function App() {
               {/* <p>Sign-in from Browser/Mobile app</p> */}
               <ol>
                 <li>
-                  Open the app &gt;&gt; Go to More &gt;&gt; Click <b>Activate TV</b>
+                Open the Truecaller App
                 </li>
                 <li>
-                  Or go to <b>https://example.com/activate</b>
+                Click on settings at the right top
                 </li>
-                <li>Enter the code below</li>
+                <li>Click “Activate TV”</li>
+                <li>Scan the QR shown on the screen</li>
+                <li>Click “Continue” and Done!</li>
               </ol>
               <div className="activation-code">
                 
@@ -170,6 +174,9 @@ function App() {
               src={clientData?.picture}
               alt={`${clientData?.given_name}'s avatar`}
             />
+            <div className="user-number">
+              {clientData?.phone_number.slice(2)}
+          </div>
           </div>
           <div className="success-animation">
             <h2>Welcome, {clientData.given_name}!</h2>

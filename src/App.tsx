@@ -26,6 +26,11 @@ function App() {
   const [, setUrlEncodedData] = useState("");
   // const [, setStatus] = useState({});
   const pollingRef = useRef(null);
+  const [timerKey, setTimerKey] = useState(0); // Used to re-render the timer component
+
+  const resetTimer = () => {
+    setTimerKey((prevKey) => prevKey + 1); // Change key to force re-render
+  };
 
   const stopPolling = () => {
     if (pollingRef.current) {
@@ -73,9 +78,9 @@ function App() {
     }
  };
 
-  useEffect(() => {
-    const fetchData = async () => {
+ const fetchData = async () => {
       try {
+        resetTimer();
         const response = await fetch('https://sdk-apps-noneu.truecaller.com/oauth/device/code', {
           method: 'POST', // Specify the method as POST
           headers: {
@@ -97,6 +102,7 @@ function App() {
       }
     };
 
+  useEffect(() => {
     // Call fetchData when component mounts
     fetchData();
     return () => stopPolling();
@@ -161,9 +167,9 @@ function App() {
               </ol>
               <div className="activation-code">
                 
-                <button className="regenerate-btn">Reload QR</button>
+                <button onClick={fetchData} className="regenerate-btn">Reload QR</button>
               </div>
-              <CountdownTimer/>
+              <CountdownTimer key={timerKey}/>
              
             </div>
           </div>): 

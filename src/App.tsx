@@ -104,8 +104,12 @@ function App() {
 
   useEffect(() => {
     // Call fetchData when component mounts
-    fetchData();
-    return () => stopPolling();
+    console.log("App mounted, fetching data...");
+     window.setFields = (field1, field2) => {
+    console.log("Received from WebView:", field1, field2);
+  };
+    // fetchData();
+    // return () => stopPolling();
   }, [])
 
 
